@@ -1,17 +1,19 @@
-import { getMongoClient } from '../config/mongoClient';
-
-// Servicio server-side para nudges/logs no estructurados; no contiene credenciales.
-export async function guardarLogNudge(log) {
-  if (!log || typeof log !== 'object') {
-    throw new TypeError('El log de nudge debe ser un objeto.');
+// Gateway del cliente. El endpoint backend debe delegar en serverLogService.js,
+// que persiste en MongoDB; MONGODB_URI nunca entra al bundle del navegador.
+export async function registrarEventoNudge(evento) {
+  if (!evento || typeof evento !== 'object') {
+    throw new TypeError('El evento de nudge debe ser un objeto.');
   }
 
-  const client = await getMongoClient();
-  const database = client.db('smart_planner');
-  const result = await database.collection('nudge_logs').insertOne({
-    ...log,
-    creadoEn: new Date()
+  const response = await fetch('/api/nudges/log', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(evento)
   });
 
-  return result.insertedId;
+  if (!response.ok) {
+    throw new Error(`No fue posible registrar el evento (${response.status}).`);
+  }
+
+  return response.json();
 }

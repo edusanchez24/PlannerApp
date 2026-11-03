@@ -63,3 +63,47 @@ drop trigger if exists al_crear_usuario_crear_perfil on auth.users;
 create trigger al_crear_usuario_crear_perfil
   after insert on auth.users
   for each row execute procedure public.crear_perfil_usuario();
+
+-- Sprint 2: actividades privadas del calendario de cada estudiante.
+create table if not exists public.actividades (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references auth.users (id) on delete cascade,
+  titulo text not null check (char_length(trim(titulo)) between 1 and 200),
+  categoria text not null check (
+    categoria in (
+      'Estudio',
+      'Deporte',
+      'Salud',
+      'Alimentacion',
+      'Hobby',
+      'Cuidado Personal'
+    )
+  ),
+  fecha date not null,
+  hora_inicio time not null,
+  hora_fin time not null,
+  completada boolean not null default false,
+  created_at timestamptz not null default now(),
+  constraint actividad_horario_valido check (hora_fin > hora_inicio)
+);
+
+alter table public.actividades enable row level security;
+
+drop policy if exists "Users can read their own activities" on public.actividades;
+create policy "Users can read their own activities"
+  on public.actividades for select using (auth.uid() = user_id);
+
+drop policy if exists "Users can create their own activities" on public.actividades;
+create policy "Users can create their own activities"
+  on public.actividades for insert
+  with check (auth.uid() = user_id);
+
+drop policy if exists "Users can update their own activities" on public.actividades;
+create policy "Users can update their own activities"
+  on public.actividades for update
+  using (auth.uid() = user_id)
+  with check (auth.uid() = user_id);
+
+drop policy if exists "Users can delete their own activities" on public.actividades;
+create policy "Users can delete their own activities"
+  on public.actividades for delete using (auth.uid() = user_id);
