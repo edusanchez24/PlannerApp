@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Planner - Presentación Evaluación 3 (INACAP)</title>
+  <style>
+    :root {
+      --bg: #090614;
+      --card-bg: #130e26;
+      --border: #382a54;
+      --accent: #cf7c1b;
+      --accent-hover: #e5922c;
+      --text: #f5f0fa;
+      --text-muted: #9f96b8;
+      --font-retro: 'Terminus', 'Courier New', monospace;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      user-select: none;
+    }
+    .slide-deck {
+      flex: 1;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+    .slide {
+      display: none;
+      width: 100%;
+      max-width: 1100px;
+      background: var(--card-bg);
+      border: 2px solid var(--border);
+      outline: 1px solid #1a1333;
+      outline-offset: -5px;
+      border-radius: 4px;
+      padding: 3rem 3.5rem;
+      animation: fadeIn 0.3s ease-out;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+    }
+    .slide.active {
+      display: block;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.985); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    .badge {
+      display: inline-block;
+      font-family: var(--font-retro);
+      font-size: 0.8rem;
+      padding: 0.3rem 0.6rem;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      background: rgba(207, 124, 27, 0.1);
+      border-radius: 3px;
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    h1 {
+      font-size: 2.6rem;
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.15;
+      margin-bottom: 0.75rem;
+    }
+    h2 {
+      font-size: 1.85rem;
+      font-weight: 700;
+      color: #ffb74d;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    p.subtitle {
+      font-size: 1.15rem;
+      color: var(--text-muted);
+      margin-bottom: 2rem;
+      line-height: 1.5;
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.75rem;
+      margin-top: 1rem;
+    }
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+      margin-top: 1rem;
+    }
+    .card-box {
+      background: #0d091e;
+      border: 1px solid #2d2045;
+      padding: 1.5rem;
+      border-radius: 3px;
+    }
+    .card-box h3 {
+      font-size: 1.15rem;
+      color: #fff;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .card-box p, .card-box li {
+      font-size: 0.925rem;
+      color: #cbd5e1;
+      line-height: 1.55;
+    }
+    .card-box ul {
+      margin-left: 1.25rem;
+      margin-top: 0.5rem;
+    }
+    .stat-huge {
+      font-size: 2.75rem;
+      font-weight: 800;
+      color: var(--accent);
+      line-height: 1;
+      margin-bottom: 0.25rem;
+    }
+    .speaker-tag {
+      background: #251b3d;
+      color: #c4b5fd;
+      padding: 0.25rem 0.6rem;
+      border-radius: 3px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      display: inline-block;
+      margin-bottom: 0.5rem;
+    }
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 3rem;
+      background: #06040d;
+      border-top: 1px solid var(--border);
+    }
+    .btn-nav {
+      background: #18122c;
+      color: #fff;
+      border: 1px solid var(--border);
+      padding: 0.5rem 1.25rem;
+      font-size: 0.9rem;
+      cursor: pointer;
+      border-radius: 3px;
+      font-weight: 600;
+      transition: all 0.15s;
+    }
+    .btn-nav:hover {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+    .btn-nav:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+    .slide-indicator {
+      font-family: var(--font-retro);
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+    .kanban-mini {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+    .kanban-col {
+      background: #090614;
+      border: 1px solid #281c3d;
+      border-radius: 3px;
+      padding: 0.75rem;
+    }
+    .kanban-col-header {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+      font-family: var(--font-retro);
+    }
+    .kanban-item {
+      background: #150f29;
+      border: 1px solid #382a54;
+      padding: 0.4rem 0.6rem;
+      border-radius: 2px;
+      font-size: 0.775rem;
+      margin-bottom: 0.4rem;
+      color: #e2e8f0;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="slide-deck">
+
+    <!-- DIAPOSITIVA 1: PORTADA -->
+    <div class="slide active">
+      <div class="badge">Evaluación 3 — Ingeniería de Software</div>
+      <h1>Smart Planner</h1>
+      <p class="subtitle">Gestión Inteligente del Tiempo, Digital Nudges y Bienestar Estudiantil</p>
+      
+      <div class="grid-2" style="margin-top: 2rem;">
+        <div class="card-box">
+          <div class="speaker-tag">Equipo de Proyecto</div>
+          <ul style="list-style: none; margin: 0; margin-top: 0.5rem; line-height: 1.8;">
+            <li><strong>Eduardo Sánchez</strong> — Product Owner</li>
+            <li><strong>Benjamín Leiva</strong> — Developer Backend & Cloud</li>
+            <li><strong>Cristopher Toloza</strong> — Scrum Master</li>
+            <li><strong>Tomás Palma</strong> — Developer Frontend & UI</li>
+          </ul>
+        </div>
+        <div class="card-box">
+          <div class="speaker-tag">Información Académica</div>
+          <ul style="list-style: none; margin: 0; margin-top: 0.5rem; line-height: 1.8;">
+            <li><strong>Docente:</strong> Oscarina Sanabria De Esposito</li>
+            <li><strong>Institución:</strong> INACAP (Sede Renca, Santiago)</li>
+            <li><strong>Tiempo de Exposición:</strong> 10 Minutos</li>
+            <li><strong>Fecha:</strong> Noviembre 2026</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- DIAPOSITIVA 2: PROBLEMÁTICA -->
+    <div class="slide">
+      <div class="speaker-tag">Disertante: Eduardo Sánchez</div>
+      <h2>Diagnóstico y Problemática en la Educación Superior</h2>
+      <p class="subtitle">La gestión del tiempo tradicional ha fracasado en el estudiantado chileno.</p>
+      
+      <div class="grid-3">
+        <div class="card-box" style="text-align: center;">
+          <div class="stat-huge">52%</div>
+          <h3>Ansiedad y Sobrecarga</h3>
+          <p>Alumnos presentan fatiga mental severa por exigencias académicas desordenadas (INJUV / ACHS 2024).</p>
+        </div>
+        <div class="card-box" style="text-align: center;">
+          <div class="stat-huge">76%</div>
+          <h3>Déficit Crítico de Sueño</h3>
+          <p>Duerme menos de 6 horas diarias en periodo de certámenes (SOCHIMES - Medicina del Sueño).</p>
+        </div>
+        <div class="card-box" style="text-align: center;">
+          <div class="stat-huge">60%</div>
+          <h3>Abandono de Agendas</h3>
+          <p>Las agendas comunes se abandonan antes de 3 semanas por la fatiga de ingresar todo manualmente.</p>
+        </div>
+      </div>
+
+      <div class="card-box" style="margin-top: 1.5rem; border-left: 4px solid var(--accent);">
+        <strong>Propuesta de Valor de Smart Planner:</strong>
+        Transformar la agenda estática en un asistente activo que detecta huecos libres entre clases y genera <em>Digital Nudges</em> (empujones de bienestar, descanso visual e hidratación) programables con 1 solo clic.
+      </div>
+    </div>
+
+    <!-- DIAPOSITIVA 3: TECNOLOGÍAS EMERGENTES (BENJA) -->
+    <div class="slide">
+      <div class="speaker-tag">Disertante: Benjamín Leiva</div>
+      <h2>Tecnologías Emergentes: SaaS, IaaS y Cloud Computing</h2>
+      <p class="subtitle">Arquitectura resiliente, desacoplada y orientada a servicios en la nube.</p>
+
+      <div class="grid-2">
+        <div class="card-box">
+          <div class="badge" style="margin-bottom: 0.5rem;">SaaS (Software as a Service)</div>
+          <h3>Supabase & MongoDB Atlas</h3>
+          <ul>
+            <li><strong>Supabase (PostgreSQL 15):</strong> Autenticación JWT y modelo relacional. Aplica <em>Row Level Security (RLS)</em> para aislar criptográficamente los datos de cada estudiante.</li>
+            <li><strong>MongoDB Atlas:</strong> Servicio NoSQL en la nube para auditoría inmutable y telemetría de eventos de nudges (Ley N° 21.459).</li>
+          </ul>
+        </div>
+
+        <div class="card-box">
+          <div class="badge" style="margin-bottom: 0.5rem;">IaaS (Infrastructure as a Service)</div>
+          <h3>Infraestructura Cloud Regional</h3>
+          <ul>
+            <li><strong>AWS / Google Cloud (Santiago):</strong> Despliegue en centros de datos sudamericanos garantizando latencias menores a <strong>40 ms</strong>.</li>
+            <li><strong>Cifrado y Seguridad:</strong> Almacenamiento cifrado en reposo con AES-256 (OWASP M1/M2).</li>
+            <li><strong>Conmutación de Resiliencia:</strong> Backend capaz de operar en modo offline local de contingencia sin caídas ante pérdidas de red.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card-box" style="margin-top: 1.25rem;">
+        <strong>Cumplimiento de RNF02:</strong> Latencia promedio de respuesta de la API de <strong>12 ms</strong>, superando con creces la exigencia de la pauta (&lt; 2.0 segundos).
+      </div>
+    </div>
+
+    <!-- DIAPOSITIVA 4: SCRUM (CRISTOPHER) -->
+    <div class="slide">
+      <div class="speaker-tag">Disertante: Cristopher Toloza</div>
+      <h2>Metodología Ágil SCRUM: Roles, Sprints y Backlog</h2>
+      <p class="subtitle">Planificación iterativa con 100% de cumplimiento en Definition of Done (DoD).</p>
+
+      <div class="kanban-mini">
+        <div class="kanban-col">
+          <div class="kanban-col-header">Sprint 1 (Base y Ley 21.719)</div>
+          <div class="kanban-item">✓ [HDU-01] Registro seguro de usuario</div>
+          <div class="kanban-item">✓ [HDU-02] Consentimiento Ley 21.719</div>
+          <div class="kanban-item">✓ [HDU-03] Esquema SQL con RLS</div>
+          <small style="color: var(--text-muted);">21 / 21 Story Points</small>
+        </div>
+        <div class="kanban-col">
+          <div class="kanban-col-header">Sprint 2 (Lógica y Telemetría)</div>
+          <div class="kanban-item">✓ [HDU-04] Agenda categorizada</div>
+          <div class="kanban-item">✓ [HDU-05] Detección de huecos libres</div>
+          <div class="kanban-item">✓ [HDU-06] Bloqueo nocturno SOCHIMES</div>
+          <div class="kanban-item">✓ [HDU-07] API Node + Mongo Atlas</div>
+          <small style="color: var(--text-muted);">24 / 26 Story Points</small>
+        </div>
+        <div class="kanban-col">
+          <div class="kanban-col-header">Sprint 3 (Evaluación Actual)</div>
+          <div class="kanban-item">✓ [HDU-08] Alerta sonora Web Audio API</div>
+          <div class="kanban-item">✓ [HDU-09] Notificaciones Push nativas</div>
+          <div class="kanban-item">✓ [HDU-10] Agendamiento con 1 Clic</div>
+          <div class="kanban-item">✓ [HDU-11] Panel de métricas semanales</div>
+          <div class="kanban-item">✓ [HDU-12] Módulo Derechos ARCO (JSON)</div>
+          <small style="color: var(--text-muted);">28 / 28 Story Points</small>
+        </div>
+      </div>
+
+      <div class="grid-2" style="margin-top: 1.25rem;">
+        <div class="card-box">
+          <strong>Definition of Done (DoD):</strong> Compilación limpia (`npm run build`), validaciones OWASP, políticas RLS en base de datos y diseño responsive Mobile-First verificado.
+        </div>
+        <div class="card-box">
+          <strong>Velocidad Promedio:</strong> 24.3 Story Points por Sprint. Total acumulado: 73 Story Points completados.
+        </div>
+      </div>
+    </div>
+
+    <!-- DIAPOSITIVA 5: DEMO EN VIVO (TOMÁS Y CRISTOPHER) -->
+    <div class="slide">
+      <div class="speaker-tag">Demostración en Vivo: Tomás Palma & Cristopher Toloza</div>
+      <h2>Demostración Práctica del Prototipo Móvil Funcional</h2>
+      <p class="subtitle">Flujo en vivo de los 5 requisitos clave de la pauta docente:</p>
+
+      <div class="grid-2">
+        <div class="card-box">
+          <h3>Ruta de la Demostración</h3>
+          <ol style="margin-left: 1.25rem; line-height: 1.7; font-size: 0.9rem;">
+            <li><strong>Acceso Rápido:</strong> Login con consentimiento legal (Ley 21.719).</li>
+            <li><strong>Agenda & Estética OneShot:</strong> Modo oscuro, pictogramas limpios y cuadro de diálogo RPG de Niko.</li>
+            <li><strong>Funcionalidad Crítica:</strong> Detección de bloque libre, alerta sonora sintética y botón <em>"Aceptar e incluir"</em>.</li>
+            <li><strong>Regla SOCHIMES:</strong> Simulación de noche (23:30) y bloqueo de interrupciones.</li>
+            <li><strong>Analítica y ARCO:</strong> Panel de balance semanal y descarga de datos en JSON.</li>
+          </ol>
+        </div>
+
+        <div class="card-box" style="display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
+          <div style="font-size: 3rem; margin-bottom: 0.5rem;">📱</div>
+          <h3>Prototipo Listo en Ejecución</h3>
+          <p style="margin-bottom: 1rem;">Servidor Vite y API Node.js activos en puerto local.</p>
+          <a href="http://localhost:5173" target="_blank" class="btn-nav" style="text-decoration: none; display: inline-block;">
+            Abrir Aplicación Móvil ↗
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- DIAPOSITIVA 6: SEGURIDAD Y MARCO LEGAL -->
+    <div class="slide">
+      <div class="speaker-tag">Disertante: Benjamín Leiva & Todo el Equipo</div>
+      <h2>Seguridad OWASP Mobile Top 10 y Marco Legal Chileno</h2>
+      <p class="subtitle">Garantías técnicas de privacidad, ética e integridad informática.</p>
+
+      <div class="grid-2">
+        <div class="card-box">
+          <h3>Marco Regulatorio Nacional</h3>
+          <ul>
+            <li><strong>Ley N° 21.719 (Protección de Datos):</strong> Consentimiento informado explícito, principio de finalidad y ejercicio de Derechos ARCO (descarga JSON y eliminación).</li>
+            <li><strong>Ley N° 21.459 (Delitos Informáticos):</strong> Registro de telemetría inmutable en MongoDB Atlas con hash de auditoría.</li>
+            <li><strong>Código Ético ACM / IEEE 2021:</strong> Sugerencias no clínicas; respeto al descanso biológico de 23:00 a 07:00 hrs.</li>
+          </ul>
+        </div>
+
+        <div class="card-box">
+          <h3>Auditoría OWASP Mobile Top 10</h3>
+          <ul>
+            <li><strong>M1 & M2 (Almacenamiento Seguro):</strong> Cifrado AES-256 y Row Level Security (RLS) en PostgreSQL impidiendo fugas cruzadas entre alumnos.</li>
+            <li><strong>M3 (Comunicaciones):</strong> TLS 1.3 forzado.</li>
+            <li><strong>M5 (Fuga de Secretos):</strong> La cadena sensible de MongoDB jamás se empaqueta en el frontend; vive protegida en el backend de Node.js.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- DIAPOSITIVA 7: CONCLUSIONES Y PREGUNTAS -->
+    <div class="slide">
+      <div class="badge">Cierre de la Exposición</div>
+      <h1>Conclusiones y Preguntas</h1>
+      <p class="subtitle">Smart Planner: Ingeniería de software con impacto humano y rigor técnico.</p>
+
+      <div class="grid-3" style="margin-top: 2rem;">
+        <div class="card-box">
+          <h3>Cloud-Native</h3>
+          <p>Arquitectura SaaS/IaaS desacoplada con alta resiliencia y latencia ultrabaja (&lt;15 ms).</p>
+        </div>
+        <div class="card-box">
+          <h3>Ética y Legalidad</h3>
+          <p>Cumplimiento proactivo de las Leyes 21.719 y 21.459 junto a estándares OWASP.</p>
+        </div>
+        <div class="card-box">
+          <h3>Agilidad Comprobada</h3>
+          <p>3 Sprints completados exitosamente bajo la metodología SCRUM y métricas de velocidad.</p>
+        </div>
+      </div>
+
+      <div style="margin-top: 2.5rem; text-align: center; color: var(--text-muted); font-size: 1.1rem;">
+        Agradecemos su atención. Quedamos atentos a las preguntas de la profesora <strong>Oscarina Sanabria</strong>.
+      </div>
+    </div>
+
+  </div>
+
+  <!-- BARRA DE CONTROLES INFERIOR -->
+  <div class="controls">
+    <button class="btn-nav" id="btnPrev" onclick="changeSlide(-1)">◀ Anterior</button>
+    <div class="slide-indicator" id="slideIndicator">1 / 7</div>
+    <button class="btn-nav" id="btnNext" onclick="changeSlide(1)">Siguiente ▶</button>
+  </div>
+
+  <script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const indicator = document.getElementById('slideIndicator');
+    const btnPrev = document.getElementById('btnPrev');
+    const btnNext = document.getElementById('btnNext');
+
+    function updateSlides() {
+      slides.forEach((s, idx) => {
+        s.classList.toggle('active', idx === currentSlide);
+      });
+      indicator.textContent = `${currentSlide + 1} / ${slides.length}`;
+      btnPrev.disabled = currentSlide === 0;
+      btnNext.disabled = currentSlide === slides.length - 1;
+    }
+
+    function changeSlide(direction) {
+      const newIdx = currentSlide + direction;
+      if (newIdx >= 0 && newIdx < slides.length) {
+        currentSlide = newIdx;
+        updateSlides();
+      }
+    }
+
+    // Teclas de navegación
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+        changeSlide(1);
+      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        changeSlide(-1);
+      }
+    });
+
+    updateSlides();
+  </script>
+</body>
+</html>
