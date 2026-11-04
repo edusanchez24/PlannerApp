@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { isCloudConfigured } from '../config/supabaseClient';
 import { cerrarSesion } from '../services/authService';
 import { reproducirCampanaBienestar } from '../services/nudgeEngine';
@@ -7,6 +7,24 @@ import { IconPhone, IconMusic, IconBulb, IconUser } from './Icons';
 
 export function Header({ user, profile }) {
   const [mostrarQR, setMostrarQR] = useState(false);
+  const [installPrompt, setInstallPrompt] = useState(null);
+  const [instalado, setInstalado] = useState(false);
+
+  useEffect(() => {
+    function handleBeforeInstallPrompt(e) {
+      e.preventDefault();
+      setInstallPrompt(e);
+    }
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+
+    if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
+      setInstalado(true);
+    }
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    };
+  }, []);
 
   async function manejarCerrarSesion() {
     try {
@@ -16,7 +34,25 @@ export function Header({ user, profile }) {
     }
   }
 
-  const mobileUrl = 'http://192.168.1.12:5173';
+  async function manejarInstalacion() {
+    if (installPrompt) {
+      installPrompt.prompt();
+      const choice = await installPrompt.userChoice;
+      if (choice.outcome === 'accepted') {
+        setInstallPrompt(null);
+        setInstalado(true);
+      }
+    } else {
+      alert(
+        "📱 Para instalar Smart Planner con su icono en la pantalla de inicio de tu celular:\n\n" +
+        "• En Android / Chrome: Toca el menú (⋮) arriba a la derecha y selecciona 'Instalar aplicación' o 'Agregar a la pantalla principal'.\n\n" +
+        "• En iPhone / Safari: Toca el botón Compartir (cuadrado con flecha hacia arriba) y selecciona 'Agregar al inicio'."
+      );
+    }
+  }
+
+  const currentOrigin = typeof window !== 'undefined' ? window.location.origin : 'http://localhost:5173';
+  const mobileUrl = currentOrigin.includes('localhost') ? 'http://192.168.1.12:5173' : currentOrigin;
 
   return (
     <header className="app-header oneshot-header">
@@ -33,6 +69,19 @@ export function Header({ user, profile }) {
         </div>
 
         <div className="header-actions">
+          {!instalado && (
+            <button
+              type="button"
+              className="btn-secondary oneshot-btn-glass"
+              onClick={manejarInstalacion}
+              style={{ borderColor: 'var(--oneshot-sun-gold)', color: 'var(--oneshot-sun-gold)' }}
+              title="Instalar como app en tu pantalla de inicio"
+            >
+              <IconPhone size={13} />
+              <span>Instalar App</span>
+            </button>
+          )}
+
           <button
             type="button"
             className="btn-secondary oneshot-btn-glass"
@@ -40,7 +89,7 @@ export function Header({ user, profile }) {
             title="Escanear código QR para abrir en celular"
           >
             <IconPhone size={13} />
-            <span>Abrir en Celular</span>
+            <span>Compartir</span>
           </button>
 
           <button
