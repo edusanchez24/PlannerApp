@@ -3,9 +3,14 @@ import { MongoClient } from 'mongodb';
 let client;
 let clientPromise;
 
+export function isMongoConfigured() {
+  const uri = globalThis.process?.env?.MONGODB_URI;
+  return Boolean(uri && !uri.includes('YOUR_MONGODB'));
+}
+
 function getMongoUri() {
   const uri = globalThis.process?.env?.MONGODB_URI;
-  if (!uri) {
+  if (!isMongoConfigured()) {
     throw new Error('MONGODB_URI no está configurada en el entorno server-side.');
   }
   return uri;

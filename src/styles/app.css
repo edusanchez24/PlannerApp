@@ -1,0 +1,995 @@
+/* ==========================================================================
+   Smart Planner · OneShot Edition: El Refugio de Niko & La Máquina del Mundo
+   Diseño fiel a OneShot: Paleta sobria crepuscular, ventanas con marcos
+   estilo RPG retro, esquinas definidas y ausencia total de neón artificial.
+   ========================================================================== */
+
+:root {
+  color-scheme: dark;
+
+  /* Fondo cósmico del mundo de OneShot (oscuridad atmosférica pura) */
+  --os-void: #090614;
+  --os-surface: #0f0b1f;
+  --os-window: #130e26;
+  --os-window-inner: #0b0717;
+  
+  /* Marcos y biseles estilo RPG Maker / OneShot */
+  --os-frame-outer: #382a54;
+  --os-frame-inner: #211836;
+  --os-frame-highlight: #4d3b70;
+
+  /* La Luz de la Bombilla del Sol (The Sunbulb) - Ámbar mate y dorado cálido */
+  --os-sun: #cf7c1b;
+  --os-sun-hover: #e08c28;
+  --os-sun-border: #8f500a;
+  --os-sun-text: #0a0614;
+  --os-gold-label: #d49a3d;
+
+  /* Textos nítidos */
+  --text-main: #f2edf8;
+  --text-muted: #9587ad;
+  --text-dim: #6c5f82;
+
+  /* Colores ambientales de las regiones del juego (The Barrens, The Glen, The Refuge) */
+  --cat-estudio: #bba4f2;
+  --cat-estudio-bg: #22143d;
+  --cat-estudio-border: #3b2466;
+
+  --cat-deporte: #4fd1c5;
+  --cat-deporte-bg: #0d2827;
+  --cat-deporte-border: #154543;
+
+  --cat-salud: #63b3ed;
+  --cat-salud-bg: #0c2136;
+  --cat-salud-border: #143759;
+
+  --cat-alimentacion: #f6ad55;
+  --cat-alimentacion-bg: #301b08;
+  --cat-alimentacion-border: #522e0e;
+
+  --cat-hobby: #ed64a6;
+  --cat-hobby-bg: #2d0b20;
+  --cat-hobby-border: #4d1538;
+
+  --cat-cuidado: #d6bcfa;
+  --cat-cuidado-bg: #240d38;
+  --cat-cuidado-border: #3f195e;
+
+  /* Geometría OneShot: esquinas sutiles / casi rectas de interfaz de juego */
+  --radius-sharp: 3px;
+  --radius-window: 4px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Nunito', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: var(--os-void);
+  color: var(--text-main);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Contenedor Principal (Marco de Juego) */
+.app-container {
+  max-width: 890px;
+  margin: 0 auto;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--os-surface);
+  border-left: 2px solid var(--os-frame-outer);
+  border-right: 2px solid var(--os-frame-outer);
+}
+
+/* ==========================================================================
+   Header: La Máquina del Mundo & Refugio
+   ========================================================================== */
+
+.app-header.oneshot-header {
+  background: #110c24;
+  color: #ffffff;
+  padding: 1.15rem 1.5rem;
+  border-bottom: 2px solid var(--os-frame-outer);
+}
+
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.brand-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.brand-title {
+  font-family: 'Silkscreen', monospace;
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: #f5f0fa;
+}
+
+.oneshot-badge-edition {
+  font-family: 'Silkscreen', monospace;
+  font-size: 0.65rem;
+  background: #201738;
+  color: var(--os-gold-label);
+  border: 1px solid var(--os-frame-highlight);
+  padding: 0.15rem 0.45rem;
+  border-radius: var(--radius-sharp);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.brand-subtitle {
+  font-size: 0.825rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+/* Botones de acción en cabecera */
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-secondary,
+.oneshot-btn-glass {
+  background: #181230;
+  color: #d1c7e6;
+  padding: 0.45rem 0.85rem;
+  border: 1px solid var(--os-frame-outer);
+  border-radius: var(--radius-sharp);
+  font-size: 0.825rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: background 0.12s ease, border-color 0.12s ease;
+}
+
+.btn-secondary:hover,
+.oneshot-btn-glass:hover {
+  background: #251b47;
+  color: #ffffff;
+  border-color: var(--os-frame-highlight);
+}
+
+/* Badges de conectividad sobrios */
+.connection-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: var(--radius-sharp);
+  font-size: 0.75rem;
+  font-weight: 700;
+  border: 1px solid transparent;
+}
+
+.badge-cloud {
+  background-color: #0c2621;
+  color: #4fd1c5;
+  border-color: #1a4a42;
+}
+
+.badge-demo {
+  background-color: #2b1c09;
+  color: #f6ad55;
+  border-color: #4d3311;
+}
+
+.badge-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: currentColor;
+}
+
+.header-user-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.85rem;
+  padding-top: 0.65rem;
+  border-top: 1px solid var(--os-frame-inner);
+  font-size: 0.85rem;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.user-name {
+  font-weight: 700;
+  color: #f5f0fa;
+}
+
+.user-role-chip {
+  background-color: #1b1433;
+  color: var(--text-muted);
+  border: 1px solid var(--os-frame-outer);
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--radius-sharp);
+  font-size: 0.725rem;
+  font-weight: 600;
+}
+
+.btn-logout {
+  background-color: #210e19;
+  color: #fca5a5;
+  border: 1px solid #4a1d33;
+  padding: 0.35rem 0.75rem;
+  border-radius: var(--radius-sharp);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.btn-logout:hover {
+  background-color: #3b1429;
+  color: #ffffff;
+}
+
+/* ==========================================================================
+   Pestañas de Navegación (Menú RPG de OneShot)
+   ========================================================================== */
+
+.tab-navigation {
+  display: flex;
+  background-color: #0b0817;
+  border-bottom: 2px solid var(--os-frame-outer);
+  overflow-x: auto;
+}
+
+.tab-button {
+  flex: 1;
+  padding: 0.85rem 1rem;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  font-weight: 700;
+  color: var(--text-dim);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+  font-size: 0.875rem;
+  transition: color 0.12s ease, background 0.12s ease;
+}
+
+.tab-button:hover {
+  color: var(--text-main);
+  background-color: #130e26;
+}
+
+.tab-button.active {
+  color: #f5f0fa;
+  border-bottom-color: var(--os-sun);
+  background-color: #171030;
+}
+
+/* Área Principal */
+.main-content {
+  flex: 1;
+  padding: 1.5rem;
+}
+
+/* ==========================================================================
+   Caja de Diálogo Auténtica de OneShot (Nudge Alert)
+   ========================================================================== */
+
+.nudge-card.oneshot-dialogue {
+  background: #0d091a;
+  border: 2px solid var(--os-frame-outer);
+  border-radius: var(--radius-window);
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+  box-shadow: inset 0 0 0 1px var(--os-frame-inner);
+}
+
+.oneshot-dialogue-layout {
+  display: flex;
+  gap: 1.15rem;
+  align-items: flex-start;
+}
+
+@media (max-width: 600px) {
+  .oneshot-dialogue-layout {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+}
+
+.oneshot-dialogue-body {
+  flex: 1;
+  width: 100%;
+}
+
+.nudge-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.35rem;
+}
+
+.oneshot-nameplate {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: 'Silkscreen', monospace;
+  font-size: 0.775rem;
+  color: var(--os-gold-label);
+  letter-spacing: 0.04em;
+}
+
+.oneshot-text-dialogue {
+  font-size: 1rem;
+  line-height: 1.45;
+  color: #f7f2fc;
+  margin: 0.5rem 0;
+  font-weight: 600;
+}
+
+.nudge-benefit {
+  font-size: 0.825rem;
+  color: var(--text-muted);
+  background: #140e29;
+  border-left: 2px solid #38829c;
+  padding: 0.35rem 0.65rem;
+  border-radius: var(--radius-sharp);
+  margin-bottom: 0.75rem;
+}
+
+.nudge-time-info {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  background: #140e29;
+  border: 1px solid var(--os-frame-outer);
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--radius-sharp);
+}
+
+/* Botones de acción del diálogo (estilo opciones de juego) */
+.nudge-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.btn-nudge-accept,
+.oneshot-btn-sun {
+  background: var(--os-sun);
+  color: var(--os-sun-text);
+  border: 1px solid var(--os-sun-border);
+  padding: 0.55rem 1rem;
+  font-weight: 800;
+  border-radius: var(--radius-sharp);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  transition: background 0.12s ease;
+}
+
+.btn-nudge-accept:hover,
+.oneshot-btn-sun:hover {
+  background: var(--os-sun-hover);
+}
+
+.btn-nudge-snooze {
+  background: #191233;
+  color: #d1c7e6;
+  border: 1px solid var(--os-frame-outer);
+  padding: 0.55rem 0.9rem;
+  border-radius: var(--radius-sharp);
+  font-weight: 600;
+  font-size: 0.85rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: background 0.12s ease;
+}
+
+.btn-nudge-snooze:hover {
+  background: #251b47;
+  color: #ffffff;
+}
+
+.btn-nudge-dismiss {
+  background: transparent;
+  color: var(--text-dim);
+  border: 1px solid transparent;
+  padding: 0.55rem 0.85rem;
+  border-radius: var(--radius-sharp);
+  font-weight: 600;
+  font-size: 0.85rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.btn-nudge-dismiss:hover {
+  color: #fca5a5;
+  background: #210e19;
+}
+
+/* ==========================================================================
+   Aviso Nocturno: Cama del Refugio (SOCHIMES RF04)
+   ========================================================================== */
+
+.oneshot-night-card {
+  background: #0d1226 !important;
+  border: 1px solid #1e2c54 !important;
+  border-radius: var(--radius-window);
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.night-icon-wrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  background: #141d3b;
+  color: #63b3ed;
+  border-radius: var(--radius-sharp);
+  border: 1px solid #23325c;
+}
+
+/* ==========================================================================
+   Gestor de Agenda y Actividades (RF02)
+   ========================================================================== */
+
+.agenda-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.date-picker-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.date-picker-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.oneshot-date-input,
+input[type="date"],
+input[type="time"] {
+  color-scheme: dark;
+  background-color: #120c26 !important;
+  color: #f5f0fa !important;
+  border: 1px solid var(--os-frame-outer) !important;
+  border-radius: var(--radius-sharp) !important;
+  padding: 0.4rem 0.65rem !important;
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 0.85rem;
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.12s ease;
+}
+
+.oneshot-date-input:hover,
+input[type="date"]:hover,
+input[type="time"]:hover {
+  border-color: var(--os-frame-highlight) !important;
+}
+
+.oneshot-date-input:focus,
+input[type="date"]:focus,
+input[type="time"]:focus {
+  border-color: var(--os-sun) !important;
+}
+
+/* Iconos de selección WebKit en tono OneShot */
+input[type="date"]::-webkit-calendar-picker-indicator,
+input[type="time"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  filter: invert(0.85) sepia(40%) saturate(200%) hue-rotate(5deg);
+  opacity: 0.85;
+  transition: opacity 0.12s ease, filter 0.12s ease;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator:hover,
+input[type="time"]::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+  filter: invert(0.95) sepia(100%) saturate(500%) hue-rotate(15deg);
+}
+
+input[type="date"]::-webkit-datetime-edit,
+input[type="date"]::-webkit-datetime-edit-fields-wrapper,
+input[type="date"]::-webkit-datetime-edit-text,
+input[type="date"]::-webkit-datetime-edit-month-field,
+input[type="date"]::-webkit-datetime-edit-day-field,
+input[type="date"]::-webkit-datetime-edit-year-field {
+  color: #f5f0fa !important;
+  background: transparent !important;
+}
+
+.quick-date-btn {
+  background: #181230;
+  color: var(--text-muted);
+  border: 1px solid var(--os-frame-outer);
+  padding: 0.45rem 0.8rem;
+  border-radius: var(--radius-sharp);
+  font-weight: 600;
+  font-size: 0.825rem;
+  transition: all 0.12s ease;
+}
+
+.quick-date-btn:hover {
+  background: #231945;
+  color: #ffffff;
+}
+
+.quick-date-btn.active {
+  background: var(--os-sun);
+  color: var(--os-sun-text);
+  border-color: var(--os-sun-border);
+  font-weight: 800;
+}
+
+.latency-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  background: #0c2621;
+  color: #4fd1c5;
+  border: 1px solid #1a4a42;
+  padding: 0.25rem 0.55rem;
+  border-radius: var(--radius-sharp);
+}
+
+/* Formulario Añadir Actividad */
+.add-activity-card {
+  background: var(--os-window);
+  border: 1px solid var(--os-frame-outer);
+  border-radius: var(--radius-window);
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.section-card-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: #f5f0fa;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.85rem;
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.825rem;
+  font-weight: 700;
+  margin-bottom: 0.35rem;
+  color: var(--text-muted);
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 0.6rem 0.8rem;
+  background: var(--os-window-inner);
+  color: #ffffff;
+  border: 1px solid var(--os-frame-outer);
+  border-radius: var(--radius-sharp);
+  font-size: 0.9rem;
+  font-family: inherit;
+  transition: border-color 0.12s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: var(--os-sun);
+}
+
+.form-group select option {
+  background: #130e26;
+  color: #ffffff;
+}
+
+.btn-primary {
+  background: var(--os-sun);
+  color: var(--os-sun-text);
+  border: 1px solid var(--os-sun-border);
+  padding: 0.6rem 1.25rem;
+  font-weight: 800;
+  border-radius: var(--radius-sharp);
+  font-size: 0.875rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: background 0.12s ease;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--os-sun-hover);
+}
+
+/* ==========================================================================
+   Lista de Actividades - Tarjetas Limpias y Sin Viñetas
+   ========================================================================== */
+
+.activities-list-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  margin-bottom: 1.5rem;
+}
+
+.activity-card-item {
+  background: #140e29;
+  border: 1px solid var(--os-frame-outer);
+  border-radius: var(--radius-sharp);
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  transition: background 0.12s ease, border-color 0.12s ease;
+}
+
+.activity-card-item:hover {
+  background: #1a1236;
+  border-color: var(--os-frame-highlight);
+}
+
+.activity-card-item.completed {
+  opacity: 0.5;
+  background: #0f0a1f;
+  border-style: dashed;
+}
+
+.activity-card-item.completed .activity-title {
+  text-decoration: line-through;
+  color: var(--text-dim);
+}
+
+.activity-left-col {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.activity-checkbox {
+  width: 17px;
+  height: 17px;
+  min-width: 17px;
+  min-height: 17px;
+  accent-color: var(--os-sun);
+  cursor: pointer;
+  border-radius: 2px;
+  margin: 0;
+}
+
+.activity-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+  flex: 1;
+}
+
+.activity-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #f7f2fc;
+  line-height: 1.35;
+  word-break: break-word;
+}
+
+.activity-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.activity-time-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  background: #0f0b1f;
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--radius-sharp);
+  border: 1px solid var(--os-frame-outer);
+}
+
+.activity-actions-col {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-shrink: 0;
+}
+
+.action-btn-edit {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: #181230;
+  color: #93c5fd;
+  border: 1px solid #2b2047;
+  padding: 0.35rem 0.65rem;
+  border-radius: var(--radius-sharp);
+  font-size: 0.75rem;
+  font-weight: 700;
+  transition: all 0.12s ease;
+}
+
+.action-btn-edit:hover {
+  background: #251b47;
+  color: #ffffff;
+  border-color: #3b2d61;
+}
+
+.action-btn-delete {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: #210e19;
+  color: #fda4af;
+  border: 1px solid #4a1d33;
+  border-radius: var(--radius-sharp);
+  font-size: 0.75rem;
+  transition: all 0.12s ease;
+}
+
+.action-btn-delete:hover {
+  background: #3b1429;
+  color: #ffffff;
+}
+
+/* Category Chips */
+.category-chip {
+  display: inline-block;
+  padding: 0.15rem 0.55rem;
+  border-radius: var(--radius-sharp);
+  font-size: 0.725rem;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.cat-Estudio {
+  background-color: var(--cat-estudio-bg);
+  color: var(--cat-estudio);
+  border: 1px solid var(--cat-estudio-border);
+}
+
+.cat-Deporte {
+  background-color: var(--cat-deporte-bg);
+  color: var(--cat-deporte);
+  border: 1px solid var(--cat-deporte-border);
+}
+
+.cat-Salud {
+  background-color: var(--cat-salud-bg);
+  color: var(--cat-salud);
+  border: 1px solid var(--cat-salud-border);
+}
+
+.cat-Alimentacion,
+.cat-Alimentación {
+  background-color: var(--cat-alimentacion-bg);
+  color: var(--cat-alimentacion);
+  border: 1px solid var(--cat-alimentacion-border);
+}
+
+.cat-Hobby {
+  background-color: var(--cat-hobby-bg);
+  color: var(--cat-hobby);
+  border: 1px solid var(--cat-hobby-border);
+}
+
+.cat-Cuidado-Personal {
+  background-color: var(--cat-cuidado-bg);
+  color: var(--cat-cuidado);
+  border: 1px solid var(--cat-cuidado-border);
+}
+
+/* Simulador Docente */
+.simulator-box {
+  background: var(--os-window);
+  border: 1px solid var(--os-frame-outer);
+  border-radius: var(--radius-window);
+  padding: 1rem 1.25rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+  margin-top: 1.5rem;
+}
+
+/* ==========================================================================
+   Panel de Estadísticas Semanales (RF05)
+   ========================================================================== */
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.85rem;
+  margin-bottom: 1.5rem;
+}
+
+.stat-card {
+  background: var(--os-window);
+  border: 1px solid var(--os-frame-outer);
+  border-radius: var(--radius-window);
+  padding: 1.25rem;
+  text-align: center;
+}
+
+.stat-number {
+  font-family: 'Silkscreen', monospace;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #f5f0fa;
+  margin-bottom: 0.35rem;
+}
+
+.stat-label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-weight: 700;
+}
+
+.category-breakdown {
+  background: var(--os-window);
+  border: 1px solid var(--os-frame-outer);
+  border-radius: var(--radius-window);
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.bar-container {
+  height: 18px;
+  background-color: var(--os-window-inner);
+  border-radius: var(--radius-sharp);
+  overflow: hidden;
+  display: flex;
+  margin-top: 0.5rem;
+  border: 1px solid var(--os-frame-outer);
+}
+
+.bar-segment {
+  height: 100%;
+}
+
+/* ==========================================================================
+   Autenticación
+   ========================================================================== */
+
+.auth-wrapper {
+  max-width: 460px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: var(--os-window);
+  border-radius: var(--radius-window);
+  border: 2px solid var(--os-frame-outer);
+  box-shadow: inset 0 0 0 1px var(--os-frame-inner);
+}
+
+.auth-tabs {
+  display: flex;
+  margin-bottom: 1.5rem;
+  background: var(--os-window-inner);
+  border-radius: var(--radius-sharp);
+  padding: 0.25rem;
+  border: 1px solid var(--os-frame-outer);
+}
+
+.auth-tab-btn {
+  flex: 1;
+  padding: 0.6rem;
+  border-radius: var(--radius-sharp);
+  background: transparent;
+  color: var(--text-dim);
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+}
+
+.auth-tab-btn.active {
+  background: #1f173b;
+  color: #ffffff;
+  border: 1px solid var(--os-frame-highlight);
+}
+
+.demo-credentials-box {
+  background: #110c24;
+  border: 1px solid var(--os-frame-outer);
+  padding: 0.85rem 1rem;
+  border-radius: var(--radius-sharp);
+  margin-bottom: 1.25rem;
+}
+
+/* Alertas */
+.alert-box {
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-sharp);
+  margin-bottom: 1rem;
+  font-size: 0.85rem;
+  border: 1px solid transparent;
+}
+
+.alert-info {
+  background-color: #0c1c2e;
+  color: #90cdf4;
+  border-color: #1a365d;
+}
+
+.alert-success {
+  background-color: #0c2621;
+  color: #4fd1c5;
+  border-color: #1a4a42;
+}
+
+.alert-error {
+  background-color: #260e19;
+  color: #fca5a5;
+  border-color: #4a1d33;
+}
+
+/* Footer */
+.app-footer {
+  margin-top: auto;
+  padding: 1.5rem;
+  text-align: center;
+  font-size: 0.775rem;
+  color: var(--text-dim);
+  border-top: 2px solid var(--os-frame-outer);
+  background: #090614;
+}

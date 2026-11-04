@@ -4,6 +4,8 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
+    "start": "node run-all.js",
+    "dev:all": "node run-all.js",
     "dev": "vite",
     "api": "node server.js",
     "build": "vite build",

@@ -1,3 +1,12 @@
+# Node.js dependencies and environment
+node_modules/
+dist/
+dist-ssr/
+*.local
+.env
+.env.*.local
+logs/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
