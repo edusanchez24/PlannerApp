@@ -6,7 +6,9 @@ import { fileURLToPath } from 'node:url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-const LOG_FILE = join(__dirname, '../../logs/nudge_audit.jsonl');
+const LOG_FILE = process.env.VERCEL
+  ? join('/tmp', 'nudge_audit.jsonl')
+  : join(__dirname, '../../logs/nudge_audit.jsonl');
 
 // Garantiza directorio de logs
 async function asegurarDirLogs() {

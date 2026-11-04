@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "framework": "vite",
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "rewrites": [
+    { "source": "/api/health", "destination": "/api/health.js" },
+    { "source": "/api/nudges/stats", "destination": "/api/nudges/stats.js" },
+    { "source": "/api/nudges/log", "destination": "/api/nudges/log.js" },
+    { "source": "/slides.html", "destination": "/slides.html" },
+    { "source": "/((?!api/|slides.html).*)", "destination": "/index.html" }
+  ]
+}
